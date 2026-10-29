@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doppler AutoVault — Control Vehicular</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-midnight-plum: #1c1624;
+      --color-shadow-plum: #2d2734;
+      --color-elevated-panel: #3a3340;
+      --color-bone-white: #f1f0ec;
+      --color-fog-line: #e5e7eb;
+      --color-ash-veil: #d0c9c4;
+      --color-mid-ash: #a5a2a5;
+      --color-iron-edge: #55505b;
+      --color-lavender-spark: #b997ff;
+      --color-signal-green: #00f575;
+      --color-neon-violet: #6b13f5;
+      --color-ember-orange: #ff5632;
+      --color-plasma-pink: #ff9efa;
+
+      --font-doppler-repro: 'Doppler Repro', 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+      --text-caption: 12px;
+      --text-body-sm: 14px;
+      --text-body: 16px;
+      --text-subheading: 18px;
+      --text-heading-sm: 24px;
+      --text-heading: 32px;
+      --text-heading-lg: 48px;
+
+      --spacing-8: 8px;
+      --spacing-16: 16px;
+      --spacing-24: 24px;
+      --spacing-32: 32px;
+      --spacing-40: 40px;
+      --spacing-64: 64px;
+
+      --radius-cards: 20px;
+      --radius-buttons: 12px;
+      --radius-small-elements: 8px;
+      --radius-pills: 9999px;
+
+      --border-hairline: 1px solid rgba(229, 231, 235, 0.14);
+      --border-subtle: 1px solid rgba(229, 231, 235, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--color-midnight-plum);
+      color: var(--color-bone-white);
+      font-family: var(--font-doppler-repro);
+      font-size: var(--text-body-sm);
+      font-weight: 400;
+      line-height: 1.5;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      background-image: radial-gradient(circle at 50% 0%, rgba(107, 19, 245, 0.14) 0%, rgba(28, 22, 36, 0) 60%);
+    }
+
+    /* Glass Header */
+    .glass-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      width: 100%;
+      background: rgba(28, 22, 36, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: var(--border-subtle);
+      padding: 16px 32px;
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--color-bone-white);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-asterisk {
+      color: var(--color-lavender-spark);
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .brand-tag {
+      font-size: var(--text-caption);
+      letter-spacing: 0.03em;
+      color: var(--color-lavender-spark);
+      border: 1px solid rgba(185, 151, 255, 0.3);
+      padding: 2px 8px;
+      border-radius: var(--radius-small-elements);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    button {
+      font-family: var(--font-doppler-repro);
+      cursor: pointer;
+      transition: opacity 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--color-signal-green);
+      color: #000000;
+      border: none;
+      border-radius: var(--radius-buttons);
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-ghost {
+      background-color: transparent;
+      color: var(--color-bone-white);
+      border: 1px solid var(--color-iron-edge);
+      border-radius: var(--radius-buttons);
+      padding: 8px 16px;
+      font-size: var(--text-body-sm);
+      font-weight: 400;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--color-fog-line);
+    }
+
+    .btn-danger-ghost {
+      background-color: transparent;
+      color: var(--color-ember-orange);
+      border: 1px solid rgba(255, 86, 50, 0.4);
+      border-radius: var(--radius-small-elements);
+      padding: 6px 12px;
+      font-size: var(--text-caption);
+      letter-spacing: 0.03em;
+    }
+
+    .btn-danger-ghost:hover {
+      border-color: var(--color-ember-orange);
+    }
+
+    .btn-inline {
+      background: none;
+      border: none;
+      color: var(--color-lavender-spark);
+      font-size: var(--text-body-sm);
+      font-weight: 500;
+      padding: 4px 0;
+    }
+
+    .btn-inline:hover {
+      text-decoration: underline;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    /* Hero / Vehicle Spec + Odometer */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background-color: var(--color-shadow-plum);
+      border: var(--border-hairline);
+      border-radius: var(--radius-cards);
+      padding: var(--spacing-32);
+    }
+
+    .eyebrow {
+      font-size: var(--text-caption);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--color-lavender-spark);
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .hero-title {
+      font-size: var(--text-heading);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--color-bone-white);
+      margin-bottom: 24px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(91deg, #855aff 14.92%, #ff5632 90.53%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      border-top: var(--border-subtle);
+      padding-top: 20px;
+    }
+
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .spec-label {
+      font-size: var(--text-caption);
+      letter-spacing: 0.03em;
+      color: var(--color-mid-ash);
+      text-transform: uppercase;
+    }
+
+    .spec-value {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--color-bone-white);
+    }
+
+    .odometer-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .odometer-display {
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--color-bone-white);
+      margin: 8px 0;
+    }
+
+    .odometer-unit {
+      font-size: var(--text-subheading);
+      color: var(--color-ash-veil);
+      font-weight: 400;
+      margin-left: 6px;
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      border-top: var(--border-subtle);
+      padding-top: 16px;
+    }
+
+    .kpi-box {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .kpi-num {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--color-bone-white);
+    }
+
+    .kpi-caption {
+      font-size: var(--text-caption);
+      letter-spacing: 0.03em;
+      color: var(--color-mid-ash);
+    }
+
+    /* Section Header */
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      font-size: var(--text-heading-sm);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--color-bone-white);
+    }
+
+    .section-subtitle {
+      font-size: var(--text-body-sm);
+      color: var(--color-ash-veil);
+      margin-top: 4px;
+    }
+
+    /* Forms inside cards */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      align-items: end;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: var(--text-caption);
+      letter-spacing: 0.03em;
+      color: var(--color-ash-veil);
+      text-transform: uppercase;
+    }
+
+    input, select, textarea {
+      background-color: var(--color-midnight-plum);
+      border: 1px solid var(--color-iron-edge);
+      border-radius: var(--radius-buttons);
+      padding: 10px 14px;
+      color: var(--color-bone-white);
+      font-family: var(--font-doppler-repro);
+      font-size: var(--text-body-sm);
+      width: 100%;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--color-lavender-spark);
+    }
+
+    /* Tables & Lists */
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      font-size: var(--text-caption);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--color-mid-ash);
+      font-weight: 500;
+      padding: 12px 16px;
+      border-bottom: var(--border-hairline);
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: var(--border-subtle);
+      color: var(--color-bone-white);
+      font-size: var(--text-body-sm);
+      vertical-align: middle;
+    }
+
+    .empty-state {
+      padding: 32px;
+      text-align: center;
+      color: var(--color-mid-ash);
+      border: 1px dashed rgba(229, 231, 235, 0.15);
+      border-radius: var(--radius-buttons);
+      margin-top: 16px;
+    }
+
+    /* Maintenance & Legal Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .item-card {
+      background-color: var(--color-shadow-plum);
+      border: var(--border-hairline);
+      border-radius: var(--radius-cards);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .item-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--color-bone-white);
+      letter-spacing: -0.01em;
+    }
+
+    .item-meta {
+      font-size: var(--text-caption);
+      color: var(--color-mid-ash);
+      letter-spacing: 0.03em;
+      margin-top: 2px;
+    }
+
+    .badge {
+      font-size: var(--text-caption);
+      letter-spacing: 0.03em;
+      padding: 4px 10px;
+      border-radius: var(--radius-small-elements);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .badge-ok {
+      background: rgba(0, 245, 117, 0.12);
+      color: var(--color-signal-green);
+      border: 1px solid rgba(0, 245, 117, 0.3);
+    }
+
+    .badge-warn {
+      background: rgba(185, 151, 255, 0.14);
+      color: var(--color-lavender-spark);
+      border: 1px solid rgba(185, 151, 255, 0.35);
+    }
+
+    .badge-due {
+      background: rgba(255, 86, 50, 0.15);
+      color: var(--color-ember-orange);
+      border: 1px solid rgba(255, 86, 50, 0.4);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background-color: var(--color-midnight-plum);
+      border-radius: var(--radius-pills);
+      overflow: hidden;
+      margin: 8px 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: var(--radius-pills);
+      transition: width 0.25s ease;
+    }
+
+    .stats-pair {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      background: rgba(28, 22, 36, 0.55);
+      padding: 12px;
+      border-radius: var(--radius-buttons);
+      border: var(--border-subtle);
+    }
+
+    .stat-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-cell span:first-child {
+      font-size: var(--text-caption);
+      color: var(--color-mid-ash);
+      letter-spacing: 0.03em;
+    }
+
+    .stat-cell span:last-child {
+      font-size: 14px;
+      color: var(--color-bone-white);
+      font-weight: 500;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: var(--border-subtle);
+      flex-wrap: wrap;
+    }
+
+    /* Quarters toggle */
+    .quarters-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .q-btn {
+      padding: 8px;
+      border-radius: var(--radius-small-elements);
+      border: 1px solid var(--color-iron-edge);
+      background: var(--color-midnight-plum);
+      color: var(--color-ash-veil);
+      font-size: var(--text-caption);
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+
+    .q-btn.active {
+      border-color: var(--color-signal-green);
+      color: var(--color-signal-green);
+      background: rgba(0, 245, 117, 0.1);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 22, 36, 0.82);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-panel {
+      background-color: var(--color-elevated-panel);
+      border: var(--border-hairline);
+      border-radius: var(--radius-cards);
+      padding: 32px;
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .modal-grid .full {
+      grid-column: span 2;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: var(--border-subtle);
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .spec-grid,
+      .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .glass-header {
+        padding: 14px 16px;
+      }
+      .container {
+        padding: 24px 16px 64px;
+      }
+      .card, .item-card, .modal-panel {
+        padding: 20px;
+      }
+      .spec-grid,
+      .form-grid,
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal-grid .full {
+        grid-column: span 1;
+      }
+      .odometer-display {
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="glass-header">
+    <div class="header-inner">
+      <div class="brand-lockup">
+        <span class="brand-asterisk">*</span>
+        <span>Doppler AutoVault</span>
+        <span class="brand-tag">ACU-84T</span>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn-ghost" id="btn-export">Exportar JSON</button>
+        <label class="btn-ghost" for="input-import" style="cursor:pointer;">
+          Importar JSON
+          <input type="file" id="input-import" accept=".json" style="display:none;" />
+        </label>
+        <button type="button" class="btn-danger-ghost" id="btn-reset">Vaciar todo</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- FICHA TÉCNICA Y ODÓMETRO -->
+    <section class="hero-grid">
+      <div class="card">
+        <span class="eyebrow">Ficha técnica del vehículo</span>
+        <h1 class="hero-title">
+          Ford Laser <span class="gradient-text">GLXi 1.8L</span>
+        </h1>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="spec-label">AÑO</span>
+            <span class="spec-value" id="spec-year">2000</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">MOTOR</span>
+            <span class="spec-value" id="spec-engine">FS9 DOHC 16V 1.8L</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">TRANSMISIÓN</span>
+            <span class="spec-value" id="spec-trans">Automática FWD</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">PLACA</span>
+            <span class="spec-value" id="spec-plate">ACU-84T</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">NEUMÁTICOS</span>
+            <span class="spec-value" id="spec-tires">185/65 R14</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">FILTRO DE AIRE</span>
+            <span class="spec-value" id="spec-filter">Papel de celulosa</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">PUERTO DIAGNÓSTICO</span>
+            <span class="spec-value" id="spec-obd">OBD-I</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">ESTADO</span>
+            <span class="spec-value" id="spec-status">Operativo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card odometer-panel">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="eyebrow">Odómetro principal</span>
+            <button type="button" class="btn-inline" id="btn-edit-odo">Ajustar lectura base →</button>
+          </div>
+          <div class="odometer-display">
+            <span id="odo-value">0</span><span class="odometer-unit">km</span>
+          </div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi-box">
+            <span class="kpi-num" id="kpi-maint-alert">0</span>
+            <span class="kpi-caption">MANTENIMIENTOS POR VENCER / VENCIDOS</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-num" id="kpi-docs-alert">0</span>
+            <span class="kpi-caption">DOCUMENTOS POR RENOVAR / VENCIDOS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BITÁCORA DE USO Y KILOMETRAJE -->
+    <section>
+      <div class="section-header">
+        <div>
+          <span class="eyebrow">Control de rodaje</span>
+          <h2 class="section-title">Bitácora de uso por salida</h2>
+          <p class="section-subtitle">Registra kilómetros recorridos en el viaje o el nuevo total del tablero.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <form id="form-trip" class="form-grid">
+          <div class="field">
+            <label for="trip-date">Fecha</label>
+            <input type="date" id="trip-date" required />
+          </div>
+          <div class="field">
+            <label for="trip-mode">Modo de cálculo</label>
+            <select id="trip-mode">
+              <option value="delta">Sumar km recorridos (+Km)</option>
+              <option value="absolute">Lectura directa de odómetro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="trip-km" id="trip-km-label">Kilómetros recorridos</label>
+            <input type="number" id="trip-km" min="1" step="0.1" placeholder="Ej. 24" required />
+          </div>
+          <div class="field">
+            <label for="trip-route">Ruta / Motivo</label>
+            <input type="text" id="trip-route" placeholder="Ej. UCV / Quinta Crespo" required />
+          </div>
+          <div class="field" style="grid-column: 1 / -1; display:flex; justify-content:flex-end; margin-top:4px;">
+            <button type="submit" class="btn-primary">Registrar recorrido →</button>
+          </div>
+        </form>
+
+        <div id="trips-container" style="margin-top: 24px;"></div>
+      </div>
+    </section>
+
+    <!-- MANTENIMIENTO PREVENTIVO -->
+    <section>
+      <div class="section-header">
+        <div>
+          <span class="eyebrow">Control mecánico y fluidos</span>
+          <h2 class="section-title">Matriz de mantenimiento preventivo</h2>
+          <p class="section-subtitle">Agrega cada componente con su intervalo en kilómetros y meses.</p>
+        </div>
+        <button type="button" class="btn-ghost" id="btn-open-maint">+ Nuevo rubro preventivo</button>
+      </div>
+
+      <div id="maintenance-container"></div>
+    </section>
+
+    <!-- DOCUMENTOS LEGALES -->
+    <section>
+      <div class="section-header">
+        <div>
+          <span class="eyebrow">Control normativo</span>
+          <h2 class="section-title">Documentos legales y trimestres</h2>
+          <p class="section-subtitle">Fechas de expedición, vencimiento y control de trimestres municipales.</p>
+        </div>
+        <button type="button" class="btn-ghost" id="btn-open-doc">+ Nuevo documento legal</button>
+      </div>
+
+      <div id="documents-container"></div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: AJUSTAR ODÓMETRO -->
+  <div class="modal-backdrop" id="modal-odo">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h3 class="section-title">Ajustar odómetro actual</h3>
+        <button type="button" class="btn-ghost" data-close="modal-odo">×</button>
+      </div>
+      <form id="form-odo">
+        <div class="field">
+          <label for="input-odo-direct">Lectura actual del tablero (km)</label>
+          <input type="number" id="input-odo-direct" min="0" step="0.1" required />
+        </div>
+        <div class="modal-footer" style="margin-top:20px;">
+          <button type="button" class="btn-ghost" data-close="modal-odo">Cancelar</button>
+          <button type="submit" class="btn-ghost" style="border-color:var(--color-signal-green); color:var(--color-signal-green);">Guardar odómetro</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CREAR / EDITAR MANTENIMIENTO -->
+  <div class="modal-backdrop" id="modal-maint">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h3 class="section-title" id="modal-maint-title">Nuevo rubro de mantenimiento</h3>
+        <button type="button" class="btn-ghost" data-close="modal-maint">×</button>
+      </div>
+      <form id="form-maint">
+        <input type="hidden" id="maint-id" />
+        <div class="modal-grid">
+          <div class="field full">
+            <label for="maint-name">Componente o servicio</label>
+            <input type="text" id="maint-name" placeholder="Ej. Aceite de motor 15W-40 / Correa de tiempo" required />
+          </div>
+          <div class="field">
+            <label for="maint-category">Categoría</label>
+            <input type="text" id="maint-category" placeholder="Ej. Motor / Transmisión / Frenos" required />
+          </div>
+          <div class="field">
+            <label for="maint-spec">Especificación / Repuesto</label>
+            <input type="text" id="maint-spec" placeholder="Ej. Filtro celulosa / 135 dientes" />
+          </div>
+          <div class="field">
+            <label for="maint-last-km">Km del último cambio</label>
+            <input type="number" id="maint-last-km" min="0" step="0.1" required />
+          </div>
+          <div class="field">
+            <label for="maint-last-date">Fecha del último cambio</label>
+            <input type="date" id="maint-last-date" required />
+          </div>
+          <div class="field">
+            <label for="maint-interval-km">Intervalo de vida útil (km)</label>
+            <input type="number" id="maint-interval-km" min="100" step="100" placeholder="Ej. 5000 o 50000" required />
+          </div>
+          <div class="field">
+            <label for="maint-interval-months">Intervalo de tiempo (meses)</label>
+            <input type="number" id="maint-interval-months" min="1" step="1" placeholder="Ej. 6 o 36" required />
+          </div>
+        </div>
+        <div class="modal-footer" style="margin-top:20px;">
+          <button type="button" class="btn-ghost" data-close="modal-maint">Cancelar</button>
+          <button type="submit" class="btn-ghost" style="border-color:var(--color-signal-green); color:var(--color-signal-green);">Guardar rubro</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CREAR / EDITAR DOCUMENTO LEGAL -->
+  <div class="modal-backdrop" id="modal-doc">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h3 class="section-title" id="modal-doc-title">Nuevo documento legal</h3>
+        <button type="button" class="btn-ghost" data-close="modal-doc">×</button>
+      </div>
+      <form id="form-doc">
+        <input type="hidden" id="doc-id" />
+        <div class="modal-grid">
+          <div class="field full">
+            <label for="doc-name">Nombre del documento</label>
+            <input type="text" id="doc-name" placeholder="Ej. RCV / Certificado Médico Vial / Trimestres" required />
+          </div>
+          <div class="field">
+            <label for="doc-entity">Entidad / Referencia</label>
+            <input type="text" id="doc-entity" placeholder="Ej. INTT / Alcaldía / Aseguradora" required />
+          </div>
+          <div class="field">
+            <label for="doc-has-quarters">Control de trimestres (T1-T4)</label>
+            <select id="doc-has-quarters">
+              <option value="no">Desactivado</option>
+              <option value="yes">Activado (T1, T2, T3, T4)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="doc-issue">Fecha de emisión / pago</label>
+            <input type="date" id="doc-issue" required />
+          </div>
+          <div class="field">
+            <label for="doc-expiry">Fecha de vencimiento</label>
+            <input type="date" id="doc-expiry" required />
+          </div>
+          <div class="field full">
+            <label for="doc-notes">Observaciones / Número de póliza o planilla</label>
+            <input type="text" id="doc-notes" placeholder="Opcional" />
+          </div>
+        </div>
+        <div class="modal-footer" style="margin-top:20px;">
+          <button type="button" class="btn-ghost" data-close="modal-doc">Cancelar</button>
+          <button type="submit" class="btn-ghost" style="border-color:var(--color-signal-green); color:var(--color-signal-green);">Guardar documento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "doppler_autovault_clean_v2";
+
+    const DEFAULT_STATE = {
+      odometer: 0,
+      vehicleSpec: {
+        modelo: "Ford Laser GLXi",
+        anio: 2000,
+        motor: "FS9 DOHC 16V 1.8L",
+        transmision: "Automática FWD",
+        neumaticos: "185/65 R14",
+        filtroAire: "Papel de celulosa",
+        puertoDiag: "OBD-I",
+        placa: "ACU-84T"
+      },
+      trips: [],
+      maintenance: [],
+      documents: []
+    };
+
+    let state = loadState();
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(DEFAULT_STATE);
+        const parsed = JSON.parse(raw);
+        return {
+          odometer: Number(parsed.odometer) || 0,
+          vehicleSpec: {
+            ...DEFAULT_STATE.vehicleSpec,
+            ...(parsed.vehicleSpec || {}),
+            placa: "ACU-84T"
+          },
+          trips: Array.isArray(parsed.trips) ? parsed.trips : [],
+          maintenance: Array.isArray(parsed.maintenance) ? parsed.maintenance : [],
+          documents: Array.isArray(parsed.documents) ? parsed.documents : []
+        };
+      } catch (e) {
+        return structuredClone(DEFAULT_STATE);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderAll();
+    }
+
+    function todayISO() {
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function addMonthsISO(dateStr, months) {
+      const parts = dateStr.split("-").map(Number);
+      if (parts.length !== 3) return dateStr;
+      const d = new Date(parts[0], parts[1] - 1 + Number(months), parts[2]);
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function daysUntil(dateStr) {
+      const target = new Date(dateStr + "T00:00:00");
+      const now = new Date(todayISO() + "T00:00:00");
+      return Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+    }
+
+    function formatNumber(n) {
+      return Number(n).toLocaleString("es-VE", { maximumFractionDigits: 1 });
+    }
+
+    function escapeHTML(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderSpecAndOdometer() {
+      document.getElementById("spec-year").textContent = state.vehicleSpec.anio;
+      document.getElementById("spec-engine").textContent = state.vehicleSpec.motor;
+      document.getElementById("spec-trans").textContent = state.vehicleSpec.transmision;
+      document.getElementById("spec-plate").textContent = state.vehicleSpec.placa;
+      document.getElementById("spec-tires").textContent = state.vehicleSpec.neumaticos;
+      document.getElementById("spec-filter").textContent = state.vehicleSpec.filtroAire;
+      document.getElementById("spec-obd").textContent = state.vehicleSpec.puertoDiag;
+      document.getElementById("odo-value").textContent = formatNumber(state.odometer);
+    }
+
+    function evaluateMaintenance(item) {
+      const kmElapsed = Math.max(0, state.odometer - Number(item.lastKm));
+      const nextKm = Number(item.lastKm) + Number(item.intervalKm);
+      const kmRemaining = nextKm - state.odometer;
+      const ratioKm = Math.min(100, Math.max(0, (kmElapsed / Number(item.intervalKm)) * 100));
+
+      const dueDate = addMonthsISO(item.lastDate, Number(item.intervalMonths));
+      const daysLeft = daysUntil(dueDate);
+
+      let status = "ok";
+      let label = "AL DÍA";
+      if (kmRemaining <= 0 || daysLeft <= 0) {
+        status = "due";
+        label = "VENCIDO";
+      } else if (ratioKm >= 80 || daysLeft <= 30) {
+        status = "warn";
+        label = "PRÓXIMO";
+      }
+
+      return { kmElapsed, nextKm, kmRemaining, ratioKm, dueDate, daysLeft, status, label };
+    }
+
+    function evaluateDocument(doc) {
+      const daysLeft = daysUntil(doc.expiryDate);
+      let status = "ok";
+      let label = `${daysLeft} DÍAS RESTANTES`;
+      if (daysLeft < 0) {
+        status = "due";
+        label = `VENCIDO HACE ${Math.abs(daysLeft)} DÍAS`;
+      } else if (daysLeft <= 30) {
+        status = "warn";
+        label = `VENCE EN ${daysLeft} DÍAS`;
+      }
+      return { daysLeft, status, label };
+    }
+
+    function renderTrips() {
+      const container = document.getElementById("trips-container");
+      if (state.trips.length === 0) {
+        container.innerHTML = `<div class="empty-state">Sin recorridos registrados. Ingresa tu primer viaje arriba para alimentar el odómetro.</div>`;
+        return;
+      }
+
+      const rows = state.trips.map((t) => `
+        <tr>
+          <td>${escapeHTML(t.date)}</td>
+          <td>${escapeHTML(t.route)}</td>
+          <td style="color:var(--color-signal-green); font-weight:500;">+${formatNumber(t.kmAdded)} km</td>
+          <td>${formatNumber(t.odometerAfter)} km</td>
+          <td style="text-align:right;">
+            <button type="button" class="btn-danger-ghost" onclick="deleteTrip('${t.id}')">Eliminar</button>
+          </td>
+        </tr>
+      `).join("");
+
+      container.innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Ruta / Uso</th>
+                <th>Distancia</th>
+                <th>Odómetro resultante</th>
+                <th style="text-align:right;">Acción</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderMaintenance() {
+      const container = document.getElementById("maintenance-container");
+      let alertCount = 0;
+
+      if (state.maintenance.length === 0) {
+        document.getElementById("kpi-maint-alert").textContent = "0";
+        container.innerHTML = `<div class="empty-state">Sin rubros de mantenimiento cargados. Usa el botón "+ Nuevo rubro preventivo" para registrar aceite, correa de tiempo, filtros o fluidos.</div>`;
+        return;
+      }
+
+      const cards = state.maintenance.map((item) => {
+        const ev = evaluateMaintenance(item);
+        if (ev.status !== "ok") alertCount++;
+
+        const badgeClass = ev.status === "due" ? "badge-due" : (ev.status === "warn" ? "badge-warn" : "badge-ok");
+        const barColor = ev.status === "due"
+          ? "var(--color-ember-orange)"
+          : (ev.status === "warn" ? "var(--color-lavender-spark)" : "var(--color-signal-green)");
+
+        return `
+          <div class="item-card">
+            <div>
+              <div class="item-top">
+                <div>
+                  <div class="item-title">${escapeHTML(item.name)}</div>
+                  <div class="item-meta">${escapeHTML(item.category.toUpperCase())}${item.spec ? " · " + escapeHTML(item.spec) : ""}</div>
+                </div>
+                <span class="badge ${badgeClass}">${ev.label}</span>
+              </div>
+
+              <div class="progress-track">
+                <div class="progress-bar" style="width:${ev.ratioKm.toFixed(1)}%; background:${barColor};"></div>
+              </div>
+
+              <div class="stats-pair">
+                <div class="stat-cell">
+                  <span>ÚLTIMO CAMBIO</span>
+                  <span>${formatNumber(item.lastKm)} km (${escapeHTML(item.lastDate)})</span>
+                </div>
+                <div class="stat-cell">
+                  <span>PRÓXIMO POR KM</span>
+                  <span>${formatNumber(ev.nextKm)} km (${ev.kmRemaining >= 0 ? "faltan " + formatNumber(ev.kmRemaining) + " km" : "excedido por " + formatNumber(Math.abs(ev.kmRemaining)) + " km"})</span>
+                </div>
+                <div class="stat-cell">
+                  <span>INTERVALO CONFIGURADO</span>
+                  <span>Cada ${formatNumber(item.intervalKm)} km / ${item.intervalMonths} meses</span>
+                </div>
+                <div class="stat-cell">
+                  <span>VENCIMIENTO POR FECHA</span>
+                  <span>${escapeHTML(ev.dueDate)} (${ev.daysLeft >= 0 ? ev.daysLeft + " días" : "vencido"})</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <button type="button" class="btn-inline" onclick="registerServiceNow('${item.id}')">Marcar cambio hoy (${formatNumber(state.odometer)} km) →</button>
+              <div style="display:flex; gap:8px;">
+                <button type="button" class="btn-ghost" style="padding:6px 12px; font-size:12px;" onclick="editMaintenance('${item.id}')">Editar</button>
+                <button type="button" class="btn-danger-ghost" onclick="deleteMaintenance('${item.id}')">Eliminar</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("kpi-maint-alert").textContent = String(alertCount);
+      container.innerHTML = `<div class="cards-grid">${cards}</div>`;
+    }
+
+    function renderDocuments() {
+      const container = document.getElementById("documents-container");
+      let alertCount = 0;
+
+      if (state.documents.length === 0) {
+        document.getElementById("kpi-docs-alert").textContent = "0";
+        container.innerHTML = `<div class="empty-state">Sin documentos legales cargados. Usa el botón "+ Nuevo documento legal" para registrar RCV, Certificado Médico, Licencia o Trimestres.</div>`;
+        return;
+      }
+
+      const cards = state.documents.map((doc) => {
+        const ev = evaluateDocument(doc);
+        if (ev.status !== "ok") alertCount++;
+
+        const badgeClass = ev.status === "due" ? "badge-due" : (ev.status === "warn" ? "badge-warn" : "badge-ok");
+
+        let quartersHTML = "";
+        if (Array.isArray(doc.quarters) && doc.quarters.length === 4) {
+          const btns = doc.quarters.map((paid, idx) => `
+            <button type="button" class="q-btn ${paid ? "active" : ""}" onclick="toggleQuarter('${doc.id}', ${idx})">
+              T${idx + 1}: ${paid ? "PAGADO" : "PENDIENTE"}
+            </button>
+          `).join("");
+          quartersHTML = `
+            <div style="margin-top:12px;">
+              <span class="spec-label">ESTADO DE TRIMESTRES MUNICIPALES</span>
+              <div class="quarters-row">${btns}</div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="item-card">
+            <div>
+              <div class="item-top">
+                <div>
+                  <div class="item-title">${escapeHTML(doc.name)}</div>
+                  <div class="item-meta">${escapeHTML(doc.entity.toUpperCase())}${doc.notes ? " · " + escapeHTML(doc.notes) : ""}</div>
+                </div>
+                <span class="badge ${badgeClass}">${ev.label}</span>
+              </div>
+
+              <div class="stats-pair" style="margin-top:12px;">
+                <div class="stat-cell">
+                  <span>EMISIÓN / ÚLTIMO PAGO</span>
+                  <span>${escapeHTML(doc.issueDate)}</span>
+                </div>
+                <div class="stat-cell">
+                  <span>FECHA DE VENCIMIENTO</span>
+                  <span>${escapeHTML(doc.expiryDate)}</span>
+                </div>
+              </div>
+              ${quartersHTML}
+            </div>
+
+            <div class="card-actions">
+              <button type="button" class="btn-inline" onclick="editDocument('${doc.id}')">Actualizar fechas / datos →</button>
+              <button type="button" class="btn-danger-ghost" onclick="deleteDocument('${doc.id}')">Eliminar</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("kpi-docs-alert").textContent = String(alertCount);
+      container.innerHTML = `<div class="cards-grid">${cards}</div>`;
+    }
+
+    function renderAll() {
+      renderSpecAndOdometer();
+      renderTrips();
+      renderMaintenance();
+      renderDocuments();
+    }
+
+    /* Acciones de Viajes */
+    document.getElementById("trip-mode").addEventListener("change", (e) => {
+      const label = document.getElementById("trip-km-label");
+      const input = document.getElementById("trip-km");
+      if (e.target.value === "delta") {
+        label.textContent = "Kilómetros recorridos (+Km)";
+        input.placeholder = "Ej. 24";
+      } else {
+        label.textContent = "Nueva lectura del odómetro (km)";
+        input.placeholder = `Mayor a ${state.odometer}`;
+      }
+    });
+
+    document.getElementById("form-trip").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const date = document.getElementById("trip-date").value;
+      const mode = document.getElementById("trip-mode").value;
+      const val = Number(document.getElementById("trip-km").value);
+      const route = document.getElementById("trip-route").value.trim();
+
+      if (!date || isNaN(val) || val <= 0 || !route) return;
+
+      let kmAdded = 0;
+      let odometerAfter = state.odometer;
+
+      if (mode === "delta") {
+        kmAdded = val;
+        odometerAfter = Number((state.odometer + val).toFixed(1));
+      } else {
+        if (val <= state.odometer) {
+          alert("La lectura directa del odómetro debe ser superior al odómetro actual (" + state.odometer + " km).");
+          return;
+        }
+        kmAdded = Number((val - state.odometer).toFixed(1));
+        odometerAfter = Number(val.toFixed(1));
+      }
+
+      state.odometer = odometerAfter;
+      state.trips.unshift({
+        id: "trip_" + Date.now(),
+        date,
+        route,
+        kmAdded,
+        odometerAfter
+      });
+
+      document.getElementById("trip-km").value = "";
+      document.getElementById("trip-route").value = "";
+      saveState();
+    });
+
+    window.deleteTrip = function(id) {
+      state.trips = state.trips.filter((t) => t.id !== id);
+      saveState();
+    };
+
+    /* Modal helpers */
+    function openModal(id) {
+      document.getElementById(id).classList.add("open");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("open");
+    }
+
+    document.querySelectorAll("[data-close]").forEach((btn) => {
+      btn.addEventListener("click", () => closeModal(btn.getAttribute("data-close")));
+    });
+
+    /* Odómetro Manual */
+    document.getElementById("btn-edit-odo").addEventListener("click", () => {
+      document.getElementById("input-odo-direct").value = state.odometer;
+      openModal("modal-odo");
+    });
+
+    document.getElementById("form-odo").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const next = Number(document.getElementById("input-odo-direct").value);
+      if (!isNaN(next) && next >= 0) {
+        state.odometer = Number(next.toFixed(1));
+        saveState();
+        closeModal("modal-odo");
+      }
+    });
+
+    /* Mantenimiento CRUD */
+    document.getElementById("btn-open-maint").addEventListener("click", () => {
+      document.getElementById("modal-maint-title").textContent = "Nuevo rubro de mantenimiento";
+      document.getElementById("maint-id").value = "";
+      document.getElementById("maint-name").value = "";
+      document.getElementById("maint-category").value = "";
+      document.getElementById("maint-spec").value = "";
+      document.getElementById("maint-last-km").value = state.odometer;
+      document.getElementById("maint-last-date").value = todayISO();
+      document.getElementById("maint-interval-km").value = "";
+      document.getElementById("maint-interval-months").value = "";
+      openModal("modal-maint");
+    });
+
+    window.editMaintenance = function(id) {
+      const item = state.maintenance.find((m) => m.id === id);
+      if (!item) return;
+      document.getElementById("modal-maint-title").textContent = "Editar rubro de mantenimiento";
+      document.getElementById("maint-id").value = item.id;
+      document.getElementById("maint-name").value = item.name;
+      document.getElementById("maint-category").value = item.category;
+      document.getElementById("maint-spec").value = item.spec || "";
+      document.getElementById("maint-last-km").value = item.lastKm;
+      document.getElementById("maint-last-date").value = item.lastDate;
+      document.getElementById("maint-interval-km").value = item.intervalKm;
+      document.getElementById("maint-interval-months").value = item.intervalMonths;
+      openModal("modal-maint");
+    };
+
+    document.getElementById("form-maint").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const id = document.getElementById("maint-id").value;
+      const payload = {
+        id: id || "maint_" + Date.now(),
+        name: document.getElementById("maint-name").value.trim(),
+        category: document.getElementById("maint-category").value.trim(),
+        spec: document.getElementById("maint-spec").value.trim(),
+        lastKm: Number(document.getElementById("maint-last-km").value),
+        lastDate: document.getElementById("maint-last-date").value,
+        intervalKm: Number(document.getElementById("maint-interval-km").value),
+        intervalMonths: Number(document.getElementById("maint-interval-months").value)
+      };
+
+      if (id) {
+        state.maintenance = state.maintenance.map((m) => (m.id === id ? payload : m));
+      } else {
+        state.maintenance.push(payload);
+      }
+
+      saveState();
+      closeModal("modal-maint");
+    });
+
+    window.registerServiceNow = function(id) {
+      const item = state.maintenance.find((m) => m.id === id);
+      if (!item) return;
+      item.lastKm = state.odometer;
+      item.lastDate = todayISO();
+      saveState();
+    };
+
+    window.deleteMaintenance = function(id) {
+      state.maintenance = state.maintenance.filter((m) => m.id !== id);
+      saveState();
+    };
+
+    /* Documentos Legales CRUD */
+    document.getElementById("btn-open-doc").addEventListener("click", () => {
+      document.getElementById("modal-doc-title").textContent = "Nuevo documento legal";
+      document.getElementById("doc-id").value = "";
+      document.getElementById("doc-name").value = "";
+      document.getElementById("doc-entity").value = "";
+      document.getElementById("doc-has-quarters").value = "no";
+      document.getElementById("doc-issue").value = todayISO();
+      document.getElementById("doc-expiry").value = addMonthsISO(todayISO(), 12);
+      document.getElementById("doc-notes").value = "";
+      openModal("modal-doc");
+    });
+
+    window.editDocument = function(id) {
+      const doc = state.documents.find((d) => d.id === id);
+      if (!doc) return;
+      document.getElementById("modal-doc-title").textContent = "Actualizar documento legal";
+      document.getElementById("doc-id").value = doc.id;
+      document.getElementById("doc-name").value = doc.name;
+      document.getElementById("doc-entity").value = doc.entity;
+      document.getElementById("doc-has-quarters").value = Array.isArray(doc.quarters) ? "yes" : "no";
+      document.getElementById("doc-issue").value = doc.issueDate;
+      document.getElementById("doc-expiry").value = doc.expiryDate;
+      document.getElementById("doc-notes").value = doc.notes || "";
+      openModal("modal-doc");
+    };
+
+    document.getElementById("form-doc").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const id = document.getElementById("doc-id").value;
+      const useQuarters = document.getElementById("doc-has-quarters").value === "yes";
+      const existing = state.documents.find((d) => d.id === id);
+
+      const payload = {
+        id: id || "doc_" + Date.now(),
+        name: document.getElementById("doc-name").value.trim(),
+        entity: document.getElementById("doc-entity").value.trim(),
+        issueDate: document.getElementById("doc-issue").value,
+        expiryDate: document.getElementById("doc-expiry").value,
+        notes: document.getElementById("doc-notes").value.trim(),
+        quarters: useQuarters
+          ? (existing && Array.isArray(existing.quarters) ? existing.quarters : [false, false, false, false])
+          : null
+      };
+
+      if (id) {
+        state.documents = state.documents.map((d) => (d.id === id ? payload : d));
+      } else {
+        state.documents.push(payload);
+      }
+
+      saveState();
+      closeModal("modal-doc");
+    });
+
+    window.toggleQuarter = function(docId, quarterIdx) {
+      const doc = state.documents.find((d) => d.id === docId);
+      if (!doc || !Array.isArray(doc.quarters)) return;
+      doc.quarters[quarterIdx] = !doc.quarters[quarterIdx];
+      saveState();
+    };
+
+    window.deleteDocument = function(id) {
+      state.documents = state.documents.filter((d) => d.id !== id);
+      saveState();
+    };
+
+    /* Exportar / Importar / Reiniciar */
+    document.getElementById("btn-export").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `autovault_ACU-84T_${todayISO()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("input-import").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const imported = JSON.parse(ev.target.result);
+          state = {
+            odometer: Number(imported.odometer) || 0,
+            vehicleSpec: {
+              ...DEFAULT_STATE.vehicleSpec,
+              ...(imported.vehicleSpec || {}),
+              placa: "ACU-84T"
+            },
+            trips: Array.isArray(imported.trips) ? imported.trips : [],
+            maintenance: Array.isArray(imported.maintenance) ? imported.maintenance : [],
+            documents: Array.isArray(imported.documents) ? imported.documents : []
+          };
+          saveState();
+        } catch (err) {
+          alert("El archivo JSON seleccionado tiene un formato inválido.");
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = "";
+    });
+
+    document.getElementById("btn-reset").addEventListener("click", () => {
+      if (confirm("¿Vaciar todos los registros y dejar únicamente la ficha técnica del vehículo?")) {
+        state = structuredClone(DEFAULT_STATE);
+        saveState();
+      }
+    });
+
+    /* Inicialización */
+    document.getElementById("trip-date").value = todayISO();
+    renderAll();
+  </script>
+</body>
+</html>
