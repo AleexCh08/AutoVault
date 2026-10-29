@@ -9,11 +9,15 @@ import DocumentsControl from './components/DocumentsControl';
 import { OdometerModal, MaintModal, DocModal } from './components/Modals';
 
 function App() {
-  const { state, updateState, resetState } = useAutoVault();
+  const { state, updateState, resetState, loading } = useAutoVault();
   
   const [modals, setModals] = useState({ odo: false, maint: false, doc: false });
   const [activeMaint, setActiveMaint] = useState(null);
   const [activeDoc, setActiveDoc] = useState(null);
+
+  if (loading) {
+    return <div style={{ padding: "40px", textAlign: "center", color: "var(--color-ash-veil)" }}>Sincronizando datos...</div>;
+  }
 
   const openMaint = (item) => {
     setActiveMaint(item);

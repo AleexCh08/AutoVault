@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
 
-const STORAGE_KEY = "doppler_autovault_clean_v2";
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
+
 const DEFAULT_STATE = {
   odometer: 0,
   vehicleSpec: {
@@ -19,32 +24,46 @@ const DEFAULT_STATE = {
 };
 
 export function useAutoVault() {
-  const [state, setState] = useState(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return DEFAULT_STATE;
-      const parsed = JSON.parse(raw);
-      return {
-        odometer: Number(parsed.odometer) || 0,
-        vehicleSpec: { ...DEFAULT_STATE.vehicleSpec, ...(parsed.vehicleSpec || {}), placa: "ACU-84T" },
-        trips: Array.isArray(parsed.trips) ? parsed.trips : [],
-        maintenance: Array.isArray(parsed.maintenance) ? parsed.maintenance : [],
-        documents: Array.isArray(parsed.documents) ? parsed.documents : []
-      };
-    } catch {
-      return DEFAULT_STATE;
-    }
-  });
+  const [state, setState] = useState(DEFAULT_STATE);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [state]);
+    const fetchVault = async () => {
+      const { data, error } = await supabase
+        .from('vault')
+        .select('data')
+        .eq('id', 'ford_laser')
+        .single();
 
-  const updateState = (updates) => {
-    setState(prev => ({ ...prev, ...updates }));
+      if (data && data.data) {
+        setState({
+          odometer: data.data.odometer || 0,
+          vehicleSpec: { ...DEFAULT_STATE.vehicleSpec, ...(data.data.vehicleSpec || {}) },
+          trips: data.data.trips || [],
+          maintenance: data.data.maintenance || [],
+          documents: data.data.documents || []
+        });
+      }
+      setLoading(false);
+    };
+    fetchVault();
+  }, []);
+
+  const updateState = async (updates) => {
+    const newState = { ...state, ...updates };
+    setState(newState);
+
+    await supabase
+      .from('vault')
+      .upsert({ id: 'ford_laser', data: newState });
   };
 
-  const resetState = () => setState(DEFAULT_STATE);
+  const resetState = async () => {
+    setState(DEFAULT_STATE);
+    await supabase
+      .from('vault')
+      .upsert({ id: 'ford_laser', data: DEFAULT_STATE });
+  };
 
-  return { state, updateState, resetState };
+  return { state, updateState, resetState, loading };
 }
