@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://wfrpigvrcudmhqofwjdc.supabase.co";
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmcnBpZ3ZyY3VkbWhxb2Z3amRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyOTExMzcsImV4cCI6MjEwODg2NzEzN30.iVuG8VTI6ql76yQqf7mlnvSyWLtGsG8f_niG-kDfVXc";
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const DEFAULT_STATE = {
   odometer: 0,
