@@ -32,7 +32,7 @@ export default function Header({ state, updateState, resetState }) {
     <header className="glass-header">
       <div className="header-inner">
         <div className="brand-lockup">
-          <span className="brand-asterisk">*</span>
+          <img src="/logo.jpg" alt="Doppler Logo" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />
           <span>Doppler AutoVault</span>
           <span className="brand-tag">{state.vehicleSpec.placa}</span>
         </div>

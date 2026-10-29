@@ -16,7 +16,14 @@ function App() {
   const [activeDoc, setActiveDoc] = useState(null);
 
   if (loading) {
-    return <div style={{ padding: "40px", textAlign: "center", color: "var(--color-ash-veil)" }}>Sincronizando datos...</div>;
+    return (
+      <div className="loading-screen">
+        <div className="spinner"></div>
+        <span style={{ color: 'var(--color-ash-veil)', fontSize: 'var(--text-body)', fontWeight: 500, letterSpacing: '0.03em' }}>
+          Sincronizando datos del vehículo...
+        </span>
+      </div>
+    );
   }
 
   const openMaint = (item) => {
