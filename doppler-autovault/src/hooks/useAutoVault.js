@@ -4,6 +4,10 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://wfrpigvrcudmhqofwjdc.supabase.co";
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmcnBpZ3ZyY3VkbWhxb2Z3amRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyOTExMzcsImV4cCI6MjEwODg2NzEzN30.iVuG8VTI6ql76yQqf7mlnvSyWLtGsG8f_niG-kDfVXc";
 
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error("¡ERROR CRÍTICO! Las credenciales de Supabase no están definidas en import.meta.env. Revisa las variables en Vercel.");
+}
+
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const DEFAULT_STATE = {
