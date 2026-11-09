@@ -758,3 +758,9 @@ tbody tr:hover {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+@media (max-width: 56.25rem) {
+  .hide-on-mobile {
+    display: none;
+  }
+}
